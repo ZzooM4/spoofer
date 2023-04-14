@@ -48,7 +48,7 @@
 	<li>Adding support for more registry keys to improve spoofing effectiveness.</li>
 	<li>Adding GPU UUID/serial spoofing for even better spoofing.</li>
 	<li>Adding proper hard drive serial spoofing to eliminate the need for RAID 0.</li>
-  <li>The spoofer currently only focuses on spoofing, which will change in the future. Traces will also be cleaned.</li>
+	<li>Expanding the spoofer beyond spoofing to include additional features and functionality, like a cleaner functionality.</li>
 </ul>
 
 <h2>Notes</h2>
