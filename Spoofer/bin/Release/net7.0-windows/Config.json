@@ -1,0 +1,323 @@
+{
+  "DeleteValue": [
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\BitBucket\\LastEnum"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform\\BackupProductKeyDefault"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform\\actionlist"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform\\ServiceSessionId"
+    }
+  ],
+  "DeleteKey": [
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\BitBucket\\Volume"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Hex-Rays\\IDA\\History"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Hex-Rays\\IDA\\History64"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2\\CPC\\Volume"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.CurrentUser",
+      "Value": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SYSTEM\\MountedDevices"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SOFTWARE\\Microsoft\\Dfrg\\Statistics"
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "Value": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Diagnostics\\DiagTrack\\SettingsRequests"
+    }
+  ],
+  "SearchRegistry": [
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Enum\\DISPLAY",
+      "Values": [
+        "EDID"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Enum\\DISPLAY",
+      "Values": [
+        "EDID"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\Configuration",
+      "Values": [
+        "Timestamp",
+        "SetId"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Control\\GraphicsDrivers\\Configuration",
+      "Values": [
+        "Timestamp",
+        "SetId"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\Connectivity",
+      "Values": [
+        "Internal",
+        "Recent",
+        "SetId"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Control\\GraphicsDrivers\\Connectivity",
+      "Values": [
+        "Internal",
+        "Recent",
+        "SetId"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "SYSTEM\\HardwareConfig",
+      "Values": [
+        "BaseBoardManufacturer",
+        "BaseBoardProduct",
+        "BIOSReleaseDate",
+        "BIOSVendor",
+        "BIOSVersion",
+        "SystemBiosVersion",
+        "SystemFamily",
+        "SystemManufacturer",
+        "SystemProductName",
+        "SystemSKU",
+        "SystemVersion"
+      ]
+    },
+    {
+      "Hive": "Microsoft.Win32.Registry.LocalMachine",
+      "SubKey": "HARDWARE\\DEVICEMAP\\Scsi",
+      "Values": [
+        "SerialNumber"
+      ]
+    }
+  ],
+  "UpdateRegistryValue": [
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Services\\mssmbios\\Data",
+      "Values": [
+        "AcpiData",
+        "BiosData",
+        "RegistersData",
+        "SMBiosData"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Services\\mssmbios\\Data",
+      "Values": [
+        "AcpiData",
+        "BiosData",
+        "RegistersData",
+        "SMBiosData"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\HardwareConfig",
+      "Values": [
+        "LastConfig"
+      ]
+    },
+    {
+      "Hive": "CurrentUser",
+      "SubKey": "Software\\Microsoft\\Office\\Common\\ClientTelemetry",
+      "Values": [
+        "MotherboardUUID"
+      ]
+    },
+    {
+      "Hive": "Users",
+      "SubKey": "\\.DEFAULT\\Software\\Microsoft\\Office\\Common\\ClientTelemetry",
+      "Values": [
+        "MotherboardUUID"
+      ]
+    },
+    {
+      "Hive": "Users",
+      "SubKey": "S-1-5-18\\Software\\Microsoft\\Office\\Common\\ClientTelemetry",
+      "Values": [
+        "MotherboardUUID"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\NVIDIA Corporation\\Global",
+      "Values": [
+        "ClientUUID",
+        "PersistenceIdentifier"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\NVIDIA Corporation\\Global\\CoProcManager",
+      "Values": [
+        "ChipsetMatchID"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Services\\TPM\\WMI",
+      "Values": [
+        "WindowsAIKHash"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Services\\TPM\\WMI",
+      "Values": [
+        "WindowsAIKHash"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Services\\TPM\\ODUID",
+      "Values": [
+        "RandomSeed"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Services\\TPM\\ODUID",
+      "Values": [
+        "RandomSeed"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Cryptography",
+      "Values": [
+        "MachineGuid"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Control\\IDConfigDB\\Hardware Profiles\\0001",
+      "Values": [
+        "HwProfileGuid"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Control\\IDConfigDB\\Hardware Profiles\\0001",
+      "Values": [
+        "HwProfileGuid"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate",
+      "Values": [ "SusClientId", "SusClientIdValidation" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Control\\SystemInformation",
+      "Values": [ "ComputerHardwareId", "ComputerHardwareIds" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Control\\SystemInformation",
+      "Values": [ "ComputerHardwareId", "ComputerHardwareIds" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Internet Explorer\\Migration",
+      "Values": [ "IE Installed Date" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\SQMClient",
+      "Values": [ "MachineId", "WinSqmFirstSessionStartTime" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\OneSettings\\WSD\\UpdateAgent\\QueryParameters",
+      "Values": [ "deviceId" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\OneSettings\\WSD\\Setup360\\QueryParameters",
+      "Values": [ "deviceId" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+      "Values": [
+        "InstallTime",
+        "InstallDate",
+        "BuildLab",
+        "BuildLabEx",
+        "DigitalProductId",
+        "DigitalProductId4"
+      ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}\\0001",
+      "Values": [ "NetworkInterfaceInstallTimestamp" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SYSTEM\\ControlSet001\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}\\0001",
+      "Values": [ "NetworkInterfaceInstallTimestamp" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Diagnostics\\DiagTrack\\SevilleEventlogManager",
+      "Values": [ "LastEventlogWrittenTime" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows Activation Technologies\\AdminObject\\Store",
+      "Values": [ "MachineId" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform\\Activation",
+      "Values": [ "ProductActivationTime" ]
+    },
+    {
+      "Hive": "LocalMachine",
+      "SubKey": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows\\Win32kWPP\\Parameters",
+      "Values": [ "WppRecorder_TraceGuid" ]
+    }
+  ]
+}
