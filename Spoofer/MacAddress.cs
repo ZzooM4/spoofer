@@ -3,32 +3,86 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+
 using static Functions;
+using System.Runtime.InteropServices;
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct IP_ADAPTER_INFO
+{
+    public IntPtr Next;
+    public int ComboIndex;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+    public string AdapterName;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 132)]
+    public string Description;
+    public uint AddressLength;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+    public byte[] Address;
+    public uint Index;
+    public uint Type;
+    public uint DhcpEnabled;
+    public IntPtr CurrentIpAddress;
+    public IP_ADDR_STRING IpAddressList;
+    public IP_ADDR_STRING GatewayList;
+    public IP_ADDR_STRING DhcpServer;
+    public bool HaveWins;
+    public IP_ADDR_STRING PrimaryWinsServer;
+    public IP_ADDR_STRING SecondaryWinsServer;
+    public int LeaseObtained;
+    public int LeaseExpires;
+}
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct IP_ADDR_STRING
+{
+    public IntPtr Next;
+    public IP_ADDRESS_STRING IpAddress;
+    public IP_ADDRESS_STRING IpMask;
+    public uint Context;
+}
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct IP_ADDRESS_STRING
+{
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+    public string Address;
+}
 
 namespace SpooferApp
 {
     public class MacAddress
     {
+        [DllImport("iphlpapi.dll", CharSet = CharSet.Auto)]
+        private static extern int GetAdaptersInfo(IntPtr pAdapterInfo, ref uint pOutBufLen);
+
+        [DllImport("iphlpapi.dll", ExactSpelling = true)]
+        private static extern int GetAdaptersInfo(byte[] pAdapterInfo, ref uint pOutBufLen);
+
         /// <summary>
         /// Spoofs the MAC address by updating the registry values for NetworkAddress, NetworkAddresses, and OriginalNetworkAddress.
         /// This method also updates the PnPCapabilities and resets the NIC adapters to apply the changes.
         /// </summary>
+
         public static void SpoofMacAddress()
         {
             var registrySubkeys = new Dictionary<string, List<string>>
+        {
             {
-                {
-                    @"SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}",
-                    new List<string> { "NetworkAddress", "NetworkAddresses", "OriginalNetworkAddress" }
-                },
-                {
-                    @"SYSTEM\ControlSet001\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}",
-                    new List<string> { "NetworkAddress", "NetworkAddresses", "OriginalNetworkAddress" }
-                }
-            };
+                @"SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}",
+                new List<string> { "NetworkAddress", "NetworkAddresses", "OriginalNetworkAddress" }
+            },
+            {
+                @"SYSTEM\ControlSet001\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}",
+                new List<string> { "NetworkAddress", "NetworkAddresses", "OriginalNetworkAddress" }
+            }
+        };
 
+            Dictionary<string, string> adapters = GetAdapters();
             using (RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
             {
                 foreach (var subkey in registrySubkeys)
@@ -39,11 +93,14 @@ namespace SpooferApp
                         {
                             foreach (var valueName in subkey.Value)
                             {
-                                object oldValue = key.GetValue(valueName);
-
-                                if (oldValue != null && oldValue.GetType() == typeof(string))
+                                foreach (var adapter in adapters)
                                 {
-                                    RegistrySearch(RegistryHive.LocalMachine, subkey.Key, valueName, GenerateIncrementedMacAddress(oldValue.ToString()));
+                                    string oldValue = adapter.Value;
+
+                                    if (oldValue != null && oldValue.GetType() == typeof(string))
+                                    {
+                                        RegistrySearch(RegistryHive.LocalMachine, subkey.Key, valueName, GenerateIncrementedMacAddress(oldValue));
+                                    }
                                 }
                             }
                         }
@@ -82,6 +139,47 @@ namespace SpooferApp
                     ToggleNICAdapter(netConnectionId, "enable");
                 }
             }
+        }
+
+        public static Dictionary<string, string> GetAdapters()
+        {
+            var result = new Dictionary<string, string>();
+
+            uint outBufLen = 0;
+            GetAdaptersInfo(IntPtr.Zero, ref outBufLen);
+
+            if (outBufLen != 0)
+            {
+                IntPtr buffer = Marshal.AllocHGlobal((int)outBufLen);
+                int errorCode = GetAdaptersInfo(buffer, ref outBufLen);
+
+                if (errorCode == 0)
+                {
+                    IntPtr current = buffer;
+
+                    while (current != IntPtr.Zero)
+                    {
+                        IP_ADAPTER_INFO adapterInfo = (IP_ADAPTER_INFO)Marshal.PtrToStructure(current, typeof(IP_ADAPTER_INFO));
+                        byte[] addressBytes = new byte[adapterInfo.AddressLength];
+                        for (int i = 0; i < addressBytes.Length; i++)
+                        {
+                            addressBytes[i] = Marshal.ReadByte(adapterInfo.Address, i);
+                        }
+                        string macAddress = string.Join("-", addressBytes.Select(b => b.ToString("X2")));
+
+                        result.Add(adapterInfo.Description, macAddress);
+                        current = adapterInfo.Next;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[!] GetAdaptersInfo failed with error: {errorCode}");
+                }
+
+                Marshal.FreeHGlobal(buffer);
+            }
+
+            return result;
         }
         /// <summary>
         /// Toggles the NIC Adapters

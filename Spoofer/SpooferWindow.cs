@@ -23,7 +23,7 @@ namespace SpooferApp
 
         private void RegistryB_Click(object sender, EventArgs e)
         {
-            RegistryChange.SpoofGUIDAddresses();
+            RegistryChange.SpoofRegistry();
             MessageBox.Show("Registry GUID addresses spoofed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -56,7 +56,7 @@ namespace SpooferApp
         private void AllB_Click(object sender, EventArgs e)
         {
             AMIDEWIN.SpoofAMIDEWIN();
-            RegistryChange.SpoofGUIDAddresses();
+            RegistryChange.SpoofRegistry();
             VolumeID.SpoofVolumeID();
             MacAddress.SpoofMacAddress();
             Peripherals.BlockPeripherals();
