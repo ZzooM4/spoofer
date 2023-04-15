@@ -76,9 +76,9 @@
 <section id="notes">
   <h2>Notes</h2>
   <ul>
-    <li>If you want to use this Spoofer for Escape From Tarkov, you should also use <a href="https://www.unknowncheats.me/forum/escape-from-tarkov/494040-hwho-slightly-fun-bsg-launcher-hwid-check-bypass.html">HWho</a>. </li>
-    <li>The Spoofer spoofs registry entries from <a href="https://github.com/volatilityfoundation/artifacts/tree/master/Microsoft/Windows/Registry%20Keys">here</a>, excluding a few entries that may not be safe to change. </li>
-    <li>The MAC address spoofer modifies registry entries only. For a lasting solution, watch <a href="https://www.youtube.com/watch?v=wgJr5F0S8f4">this video</a>. </li>
+    <li>*If you want to use this Spoofer for Escape From Tarkov, you should also use <a href="https://www.unknowncheats.me/forum/escape-from-tarkov/494040-hwho-slightly-fun-bsg-launcher-hwid-check-bypass.html">HWho</a>. </li>
+    <li>**The Spoofer spoofs registry entries from <a href="https://github.com/volatilityfoundation/artifacts/tree/master/Microsoft/Windows/Registry%20Keys">here</a>, excluding a few entries that may not be safe to change. </li>
+    <li>***The MAC address spoofer modifies registry entries only. For a lasting solution, watch <a href="https://www.youtube.com/watch?v=wgJr5F0S8f4">this video</a>. </li>
   </ul>
 </section>
 <section id="disclaimer">
