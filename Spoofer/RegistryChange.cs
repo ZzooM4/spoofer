@@ -88,9 +88,6 @@ namespace SpooferApp
                 process.WaitForExit();
                 Console.WriteLine("Command executed.");
             }
-
-            Console.WriteLine("All commands executed. Press any key to exit.");
-            Console.ReadKey();
         }
     }
 }
