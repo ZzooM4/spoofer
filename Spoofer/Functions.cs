@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SpooferApp;
+using System.Xml.Linq;
 
 public class Functions
 {
@@ -213,13 +214,13 @@ public class Functions
 
     private static int IncrementIntValue(int value, string valueName)
     {
-        value += ((int)(valueName[valueName.Length - 1]) - '0' + 1) * 2;
+        value += ((int)(Char.ToLower(valueName[valueName.Length - 1])) - '0' + 1) * 2;
         return value;
     }
 
     private static long IncrementLongValue(long value, string valueName)
     {
-        value += ((int)(valueName[valueName.Length - 1]) - '0' + 1) * 2;
+        value += ((int)(Char.ToLower(valueName[valueName.Length - 1])) - '0' + 1) * 2;
         return value;
     }
 
@@ -323,6 +324,194 @@ public class Functions
         {
             // Handle the exception by skipping this subkey and continuing with the next one
             return;
+        }
+    }
+
+    /// <summary>
+    /// Renames every subkey
+    /// </summary>
+    public static void RenameRegistrySubkeys(RegistryHive hive, string oldParentKey, object layer = null, object values = null, object valuenames = null)
+    {
+        RegistryKey baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Registry64);
+        RegistryKey parentKey = baseKey.OpenSubKey(oldParentKey, true);
+        if (parentKey == null)
+        {
+            Console.WriteLine("Error: Unable to open parent key.");
+            return;
+        }
+        string[] subKeyNames = parentKey.GetSubKeyNames();
+
+        foreach (string subKeyName in subKeyNames)
+        {
+            RegistryKey subKey = null;
+
+            try
+            {
+                subKey = parentKey.OpenSubKey(subKeyName, true);
+                if (subKey == null)
+                {
+                    Console.WriteLine($"Error: Unable to open subkey '{subKeyName}'.");
+                    continue;
+                }
+                string newSubKeyName = IncrementStringValue(subKeyName);
+                RegistryKey newSubKey = parentKey.CreateSubKey(newSubKeyName);
+                if (newSubKey == null)
+                {
+                    Console.WriteLine($"Error: Unable to create subkey '{newSubKeyName}'.");
+                    subKey.Close();
+                    continue;
+                }
+
+                foreach (string valueName in subKey.GetValueNames())
+                {
+                    if (values != null)
+                    {
+                        Console.WriteLine($"Value Name: {valueName}");
+                    }
+                    object value = subKey.GetValue(valueName);
+                    if (valuenames != null) { newSubKey.SetValue(IncrementStringValue(valueName), value); }
+                    else { newSubKey.SetValue(valueName, value); }
+                }
+
+                if (layer == null)
+                {
+                    // only rename the first layer of subkeys
+                    foreach (string subSubKeyName in subKey.GetSubKeyNames())
+                    {
+                        RegistryKey subSubKey = null;
+                        RegistryKey newSubSubKey = null;
+
+                        try
+                        {
+                            subSubKey = subKey.OpenSubKey(subSubKeyName);
+                            if (subSubKey == null)
+                            {
+                                Console.WriteLine($"Error: Unable to open subkey '{subSubKeyName}'.");
+                                continue;
+                            }
+                            newSubSubKey = newSubKey.CreateSubKey(subSubKeyName);
+                            if (newSubSubKey == null)
+                            {
+                                Console.WriteLine($"Error: Unable to create subkey '{subSubKeyName}'.");
+                                subSubKey.Close();
+                                continue;
+                            }
+
+                            foreach (string valueName in subSubKey.GetValueNames())
+                            {
+                                if (values != null)
+                                {
+                                    Console.WriteLine($"Value Name: {valueName}");
+                                }
+                                object value = subSubKey.GetValue(valueName);
+                                if (valuenames != null) { newSubSubKey.SetValue(IncrementStringValue(valueName), value); }
+                                else { newSubSubKey.SetValue(valueName, value); }
+                            }
+
+                            newSubSubKey.Close();
+                            subSubKey.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while renaming subkey '{subSubKeyName}': {ex.Message}");
+                        }
+                    }
+                }
+                else
+                {
+                    // recursively rename all subkeys and values
+                    RenameRegistrySubkeysRecursive(subKey, newSubKey, values, valuenames);
+                }
+
+                subKey.Close();
+                newSubKey.Close();
+                try
+                {
+                    if (parentKey.SubKeyCount > 0 && parentKey.OpenSubKey(subKeyName) != null)
+                    {
+                        parentKey.DeleteSubKeyTree(subKeyName);
+                    }
+                }
+                catch (Exception ex) { Console.WriteLine(ex); }
+                Console.WriteLine($"\nRenamed: {parentKey}\nFrom: {subKeyName}\nTo: {newSubKeyName}\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while renaming subkey '{subKeyName}': {ex.Message}");
+            }
+            finally
+            {
+                if (subKey != null)
+                {
+                    subKey.Close();
+                }
+            }
+        }
+    }
+
+    private static void RenameRegistrySubkeysRecursive(RegistryKey sourceKey, RegistryKey destKey, object values = null, object valuenames = null)
+    {
+        try
+        {
+            foreach (string subKeyName in sourceKey.GetSubKeyNames())
+            {
+                RegistryKey sourceSubKey = null;
+                RegistryKey destSubKey = null;
+
+                try
+                {
+                    sourceSubKey = sourceKey.OpenSubKey(subKeyName);
+                    string newSubKeyName = IncrementStringValue(subKeyName);
+                    destSubKey = destKey.CreateSubKey(newSubKeyName);
+
+                    foreach (string valueName in sourceSubKey.GetValueNames())
+                    {
+                        if (values != null)
+                        {
+                            Console.WriteLine($"Value Name: {valueName}");
+                        }
+                        object value = sourceSubKey.GetValue(valueName);
+                        if (valuenames != null) { destSubKey.SetValue(IncrementStringValue(valueName), value); }
+                        else { destSubKey.SetValue(valueName, value); }
+                    }
+
+                    RenameRegistrySubkeysRecursive(sourceSubKey, destSubKey, values);
+
+                    if (sourceKey.GetSubKeyNames().Contains(subKeyName))
+                    {
+                        try {
+                        sourceKey.DeleteSubKeyTree(subKeyName);
+                        }
+                        catch (Exception ex) { Console.WriteLine(ex); }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Subkey '{subKeyName}' does not exist, skipping deletion.");
+                    }
+
+                    Console.WriteLine($"\nRenamed: {sourceKey}\nFrom: {subKeyName}\nTo: {newSubKeyName}\n");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred while renaming subkey: {subKeyName}");
+                    Console.WriteLine($"Error message: {ex.Message}");
+                }
+                finally
+                {
+                    if (sourceSubKey != null)
+                    {
+                        sourceSubKey.Close();
+                    }
+                    if (destSubKey != null)
+                    {
+                        destSubKey.Close();
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while getting subkeys: {ex.Message}");
         }
     }
 

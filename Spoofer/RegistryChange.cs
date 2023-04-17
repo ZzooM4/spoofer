@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,10 +17,42 @@ namespace SpooferApp
 
         public static void SpoofRegistry()
         {
+
+
             string configFilePath = "Config.json";
             string json = File.ReadAllText(configFilePath);
-
             dynamic config = JsonConvert.DeserializeObject(json);
+
+            foreach (dynamic entry in config.UpdateSubkeyNames)
+            {
+                string hiveName = entry.Hive;
+                string keyPath = entry.Value;
+                JArray parametersArray = entry.Parameters;
+
+                object layer = null;
+                object values = null;
+                object valuenames = null;
+
+                int index = Array.FindIndex(parametersArray.ToObject<object[]>(), p => p != null);
+
+                if (index >= 0)
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            layer = parametersArray[0];
+                            break;
+                        case 1:
+                            values = parametersArray[1];
+                            break;
+                        case 2:
+                            valuenames = parametersArray[2];
+                            break;
+                    }
+                }
+
+                RenameRegistrySubkeys(GetRegistryHive(hiveName), keyPath, layer, values, valuenames);
+            }
 
             foreach (dynamic entry in config.DeleteKey)
             {
@@ -67,26 +100,35 @@ namespace SpooferApp
                 }
             }
 
-            string[] commands = {
-            "fsutil usn deletejournal /n c:",
-            "fsutil usn deletejournal /n D:",
-            "fsutil usn deletejournal /n E:",
-            "fsutil usn deletejournal /n F:",
-            "vssadmin delete shadows /All"
-        };
+            List<string> commands = new List<string> {
+                "vssadmin delete shadows /All /quiet"
+            };
+
+            foreach (var drive in DriveInfo.GetDrives())
+            {
+                string driveName = drive.Name.Remove(2);
+                commands.Add($"fsutil usn deletejournal /n {driveName}");
+            }
 
             foreach (string command in commands)
             {
                 Console.WriteLine("Executing command: " + command);
-                Process process = new Process();
-                process.StartInfo.FileName = "cmd.exe";
-                process.StartInfo.Arguments = "/c " + command;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-                process.Start();
-                process.WaitForExit();
-                Console.WriteLine("Command executed.");
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = "/c " + command,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (Process process = new Process())
+                {
+                    process.StartInfo = processStartInfo;
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+                    Console.WriteLine($"Command executed. Output: {output}");
+                }
             }
         }
     }

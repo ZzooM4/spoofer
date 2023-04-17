@@ -9,7 +9,7 @@ namespace SpooferApp
     public class AMIDEWIN
     {
         /// <summary>
-        /// Creates all the comments for AMIDEWIN, then sends it to RunAMIDEWIN so the commands get run.
+        /// Creates all the commands for AMIDEWIN, then sends it to RunAMIDEWIN so the commands get run.
         /// </summary>
         public static void SpoofAMIDEWIN()
         {
